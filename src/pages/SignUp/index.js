@@ -39,6 +39,7 @@ export default function SignUp() {
             autoCaptalize='none'
             value={nome}
             onChangeText={(text) => setNome(text)}
+            secureTextEntry={true}
           />
         </AreaInput>
 

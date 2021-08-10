@@ -51,6 +51,7 @@ export default function SignIn() {
             autoCaptalize='none'
             value={password}
             onChangeText={ (text) => setPassword(text)}
+            secureTextEntry={true}
           />
         </AreaInput>
 
