@@ -16,6 +16,7 @@
     "@react-navigation/drawer": "^5.x",
     "@react-navigation/native": "^5.x",
     "@react-navigation/stack": "^5.x",
+    "date-fns": "^2.23.0",
     "firebase": "^8.9.0",
     "react": "17.0.1",
     "react-native": "0.64.2",

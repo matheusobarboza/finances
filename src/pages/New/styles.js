@@ -14,6 +14,7 @@ export const Input = styled.TextInput.attrs({
   margin-top: 30px;
   margin-bottom: 20px;
   font-size: 17px;
+  color: #222;
 `;
 
 export const SubmitButton = styled.TouchableOpacity`
