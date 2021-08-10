@@ -7,7 +7,7 @@ import Picker from '../../components/Picker';
 import firebase from '../../services/firebaseConnection';
 import { AuthContext } from '../../contexts/auth';
 
-import { Background, Input, SubmitButton, SubmitText } from './styles.js';
+import { Background, Input, SubmitButton, SubmitText } from './styles';
 
 export default function New() {
   const navigation = useNavigation();
@@ -55,7 +55,7 @@ export default function New() {
     await user.once('value').then((snapshot) => {
       let saldo = parseFloat(snapshot.val().saldo);
 
-      tipo === 'desepsa' ? saldo -= parseFloat(valor) : saldo += parseFloat(valor);
+      tipo === 'despesa' ? saldo -= parseFloat(valor) : saldo += parseFloat(valor);
 
       user.child('saldo').set(saldo);
     });

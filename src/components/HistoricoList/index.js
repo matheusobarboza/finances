@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import { Container, Tipo, IconView, TipoText, ValorText } from './styles';
 
 export default function HistoricoList( { data } ) {
+  console.log(data);
  return (
    <Container>
      <Tipo>
@@ -16,7 +17,7 @@ export default function HistoricoList( { data } ) {
        </IconView>
      </Tipo>
 
-     <ValorText>{data.valor}</ValorText>
+     <ValorText>{data.valor.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1. ')}</ValorText>
    </Container>
   );
 }

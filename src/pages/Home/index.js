@@ -1,6 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import { format } from 'date-fns';
 
 import { AuthContext } from '../../contexts/auth';
+import firebase from '../../services/firebaseConnection';
+
 import Header from '../../components/Header';
 import HistoricoList from '../../components/HistoricoList';
 
@@ -9,20 +12,44 @@ import { Background, Container, Nome, Saldo, Title, List } from './styles.js';
 export default function Home() {
 
   const { user } = useContext(AuthContext);
+  const uid = user && user.uid;
 
-  const [historico, setHistorico] = useState([
-    {key: 1, tipo: 'receita', valor: 1200},
-    {key: 2, tipo: 'despesa', valor: 500},
-    {key: 3, tipo: 'Receita', valor: 89.90},
-    {key: 4, tipo: 'despesa', valor: 750},
-  ]);
+  const [historico, setHistorico] = useState();
+  const [saldo, setSaldo] = useState(0);
+
+  useEffect(() => {
+    async function loadList() {
+      await firebase.database().ref('users').child(uid).on('value', (snapshot) =>{
+        setSaldo(snapshot.val().saldo);
+      })
+
+      await firebase.database().ref('historico')
+      .child(uid)
+      .orderByChild('date').equalTo(format(new Date, 'dd/MM/yy'))
+      .limitToLast(10).on('value', (snapshot) => {
+        setHistorico([]);
+
+        snapshot.forEach((childItem) => {
+          let list = {
+            key: childItem.key,
+            tipo: childItem.val().tipo,
+            valor: childItem.val().valor
+          };
+
+          setHistorico(oldArray => [...oldArray, list].reverse());
+        })
+      })
+    }
+
+    loadList();
+  }, [])
 
  return (
    <Background>
      <Header />
      <Container>
-       <Nome>{user.nome}</Nome>
-       <Saldo>R$ 123,00</Saldo>
+       <Nome>{user && user.nome}</Nome>
+       <Saldo>R$ {saldo.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1. ')}</Saldo>
      </Container>
 
      <Title>Últimas movimentações</Title>
