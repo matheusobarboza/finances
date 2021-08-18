@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { format, isBefore } from 'date-fns';
-import { Alert } from 'react-native';
+import { Alert, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { AuthContext } from '../../contexts/auth';
 import firebase from '../../services/firebaseConnection';
@@ -8,12 +9,14 @@ import firebase from '../../services/firebaseConnection';
 import Header from '../../components/Header';
 import HistoricoList from '../../components/HistoricoList';
 
-import { Background, Container, Nome, Saldo, Title, List } from './styles.js';
+import { Background, Container, Nome, Saldo, Title, List, Area } from './styles.js';
 
 export default function Home() {
 
   const { user } = useContext(AuthContext);
   const uid = user && user.uid;
+
+  const [newDate, setNewDate] = useState(new Date());
 
   const [historico, setHistorico] = useState();
   const [saldo, setSaldo] = useState(0);
@@ -26,7 +29,7 @@ export default function Home() {
 
       await firebase.database().ref('historico')
       .child(uid)
-      .orderByChild('date').equalTo(format(new Date, 'dd/MM/yyyy'))
+      .orderByChild('date').equalTo(format(newDate, 'dd/MM/yyyy'))
       .limitToLast(10).on('value', (snapshot) => {
         setHistorico([]);
 
@@ -93,6 +96,10 @@ export default function Home() {
     })
   }
 
+  function handleShowPicker() {
+    
+  }
+
  return (
    <Background>
      <Header />
@@ -101,7 +108,12 @@ export default function Home() {
        <Saldo>R$ {saldo.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1. ')}</Saldo>
      </Container>
 
-     <Title>Últimas movimentações</Title>
+    <Area>
+      <TouchableOpacity onPress={handleShowPicker}>
+        <Icon name="event" color="#fff" size={30} />
+      </TouchableOpacity>
+      <Title>Últimas movimentações</Title>
+    </Area>
 
      <List 
       showsVerticalScrollIndicator={false}
