@@ -3,6 +3,8 @@ import { format, isBefore } from 'date-fns';
 import { Alert, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+import DatePicker from '../../components/DatePicker';
+
 import { AuthContext } from '../../contexts/auth';
 import firebase from '../../services/firebaseConnection';
 
@@ -17,6 +19,7 @@ export default function Home() {
   const uid = user && user.uid;
 
   const [newDate, setNewDate] = useState(new Date());
+  const [show, setShow] = useState(false);
 
   const [historico, setHistorico] = useState();
   const [saldo, setSaldo] = useState(0);
@@ -47,7 +50,7 @@ export default function Home() {
     }
 
     loadList();
-  }, [])
+  }, [newDate])
 
   function handleDelete(data) {
     //Pegando data do item
@@ -97,8 +100,18 @@ export default function Home() {
   }
 
   function handleShowPicker() {
-    
-  }
+    setShow(true);
+  };
+
+  function handleClosePicker() {
+    setShow(false);
+  };
+
+  const onChange = (date) => {
+    setShow(Platform.OS === 'ios');
+    setNewDate(date);
+    console.log(date);
+  };
 
  return (
    <Background>
@@ -121,6 +134,14 @@ export default function Home() {
       keyExtractor={ item => item.key }
       renderItem={ ({ item }) => ( <HistoricoList data={item} deleteItem={handleDelete}/> ) }
      />
+
+     {show && (
+       <DatePicker 
+        onClose={handleClosePicker}
+        date={newDate}
+        onChange={onChange}
+       />
+     )}
    </Background>
   );
 }
